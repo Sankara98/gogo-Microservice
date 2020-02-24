@@ -7,7 +7,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
+)
+
+const (
+	fakeMatchLocationResult = "/matches/5a003b78-409e-4452-b456-a6f0dcee05bd"
 )
 
 var (
@@ -35,6 +40,18 @@ func TestCreateMatch(t *testing.T) {
 	res, err := client.Do(req)
 	if err != nil {
 		t.Errorf("Error in POST to createMatchHandler %v", err)
+	}
+
+	loc, headerOk := res.Header["Location"]
+	if !headerOk {
+		t.Error("Location header is not set")
+	} else {
+		if !strings.Contains(loc[0], "/matches/") {
+			t.Errorf("Location header should contain '/matches/'")
+		}
+		if len(loc[0]) != len(fakeMatchLocationResult) {
+			t.Errorf("Location value does not contain guid of new match")
+		}
 	}
 	defer res.Body.Close()
 
