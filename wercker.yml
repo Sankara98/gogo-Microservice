@@ -1,4 +1,4 @@
-box: golang
+box: golang:latest
 # Defining the dev pipeline
 dev:
   steps:
@@ -38,10 +38,10 @@ unit-test:
           go test -v ./service
 deploy:
   steps:
-    - internal/docker-scratch-push:
+    - internal/docker-push:
         username: $USERNAME
         password: $PASSWORD
-        cmd: ./gogo-service
+        cmd: /pipeline/source/gogo-service
         port: "8080"
         tag: latest
         repository: sankara98/gogo-service
