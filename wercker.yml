@@ -25,17 +25,17 @@ build:
     - script:
         name: env
         code: env
-
     # Test the project
     - script:
         name: copy files to wercker output
         code: |
           cp -R ./ ${WERCKER_OUTPUT_DIR}
 unit-test:
-  - script:
-      name: gogo service unit test
-      code: |
-        go test -v ./service
+  steps:
+    - script:
+        name: gogo service unit test
+        code: |
+          go test -v ./service
 deploy:
   steps:
     - internal/docker-push:
