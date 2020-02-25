@@ -23,6 +23,41 @@ var (
 	})
 )
 
+func TestCreateMatchRespondsToBadData(t *testing.T) {
+	client := &http.Client{}
+	var matchRespository matchRepository
+	server := httptest.NewServer(http.HandlerFunc(createMatchHandler(formatter, matchRespository)))
+	defer server.Close()
+
+	body1 := []byte("this is not valid json")
+	body2 := []byte("{\"test\":\"this is valid json, but doesn't conform to server expectations.\"}")
+
+	//Send invalid JSON
+	req, err := http.NewRequest("POST", server.URL, bytes.NewBuffer(body1))
+	if err != nil {
+		t.Errorf("Error in creating POST request for createMatchHandler: %v", err)
+	}
+	req.Header.Add("Content-type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		t.Errorf("Error in POST to createMatchHandler: %v", err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusBadRequest {
+		t.Error("Sending invalid JSON should result in bad request from server")
+	}
+	req2, err2 := http.NewRequest("POST", server.URL, bytes.NewBuffer(body2))
+	if err2 != nil {
+		t.Errorf("Error in creating second post request for invalid data on create match: %v", err2)
+	}
+	req.Header.Add("Content-type", "application/json")
+	res2, _ := client.Do(req2)
+	defer res2.Body.Close()
+	if res2.StatusCode != http.StatusBadRequest {
+		t.Error("Sending valid JSON but with incorrect fields should result in a bad request but didn't")
+	}
+}
 func TestCreateMatch(t *testing.T) {
 	client := &http.Client{}
 	var matchRepository matchRepository
