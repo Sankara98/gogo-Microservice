@@ -21,7 +21,7 @@ build:
     - script:
         name: go build
         code: |
-          go build -o application
+          go build ./...
     - script:
         name: env
         code: env
@@ -29,7 +29,7 @@ build:
     - script:
         name: copy files to wercker output
         code: |
-          cp application $"WERCKER_OUTPUT_DIR"
+          cp -R ./ ${WERCKER_OUTPUT_DIR}
 unit-test:
   steps:
     - script:
@@ -38,10 +38,15 @@ unit-test:
           go test -v ./service
 deploy:
   steps:
+    - script: 
+        name: go get
+        code: |
+        go get github.com/Sankara98/gogo-service
+        go build ./...
     - internal/docker-scratch-push:
         username: $USERNAME
         password: $PASSWORD
-        cmd: ./application
+        cmd: src/github/Sankara98/gogo-service/gogo-service
         port: "8080"
         tag: latest
         repository: sankara98/gogo-service
