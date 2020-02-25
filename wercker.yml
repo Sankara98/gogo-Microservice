@@ -41,7 +41,7 @@ deploy:
     - internal/docker-scratch-push:
         username: $USERNAME
         password: $PASSWORD
-        entrypoint: ${WERCKER_OUTPUT_DIR}
+        entrypoint: $WERCKER_OUTPUT_DIR
         port: "8080"
         tag: latest
         repository: sankara98/gogo-service
