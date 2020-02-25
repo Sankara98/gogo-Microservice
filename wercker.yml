@@ -42,7 +42,6 @@ deploy:
     - internal/docker-scratch-push:
         username: $USERNAME
         password: $PASSWORD
-        cmd: src/github/Sankara98/gogo-service/gogo-service
         port: "8080"
         tag: latest
         repository: sankara98/gogo-service
