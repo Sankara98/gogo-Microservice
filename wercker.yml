@@ -2,6 +2,7 @@ box: golang
 # Defining the dev pipeline
 dev:
   steps:
+       - setup-go-workspace: github.com/Sankara98/gogo-service
     - internal/watch:
         code: |
           go build ./...
