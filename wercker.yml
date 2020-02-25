@@ -1,9 +1,16 @@
 box: golang
 # Defining the dev pipeline
+dev:
+  steps:
+    - internal/watch:
+        code: |
+          go build ./...
+          ./source
+        reload: true
 build:
   steps:
     - wercker/golint
-    - setup-go-workspace: github.com/Sankara98/gogo-service
+
     - script:
         name: go get
         code: |
@@ -31,9 +38,11 @@ unit-test:
           go test -v ./service
 deploy:
   steps:
-    - internal/docker-push:
+    - internal/docker-scratch-push:
         username: $USERNAME
         password: $PASSWORD
+        entrypoint: /pipeline/source/
+        cmd: ./gogo-service
         port: "8080"
         tag: latest
         repository: sankara98/gogo-service
