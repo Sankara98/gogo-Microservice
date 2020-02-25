@@ -2,13 +2,15 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/unrolled/render"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/unrolled/render"
 )
 
 const (
@@ -23,11 +25,12 @@ var (
 
 func TestCreateMatch(t *testing.T) {
 	client := &http.Client{}
+	var matchRepository matchRepository
 	server := httptest.NewServer(
-		http.Handler(createMatchHandler(formatter)))
+		http.Handler(createMatchHandler(formatter, matchRepository)))
 	defer server.Close()
 
-	body := []byte("{\n\"gridsize\": 19,\n \"players\": [\n	{\n\"color\": \"white\",\n		\"name\": \"bob\"\n		},\n	{\n\"color\": \"black\", \n	\"name\": \"alfred\"\n	},\n	} ]	\n}")
+	body := []byte("{\n \"gridsize\": 19,\n  \"playerWhite\": \"bob\",\n  \"playerBlack\": \"alfred\"\n}")
 
 	req, err := http.NewRequest("POST",
 		server.URL, bytes.NewBuffer(body))
@@ -42,9 +45,10 @@ func TestCreateMatch(t *testing.T) {
 		t.Errorf("Error in POST to createMatchHandler %v", err)
 	}
 
+	defer res.Body.Close()
 	loc, headerOk := res.Header["Location"]
 	if !headerOk {
-		t.Error("Location header is not set")
+		t.Errorf("Location header is not set: %v", headerOk)
 	} else {
 		if !strings.Contains(loc[0], "/matches/") {
 			t.Errorf("Location header should contain '/matches/'")
@@ -53,7 +57,6 @@ func TestCreateMatch(t *testing.T) {
 			t.Errorf("Location value does not contain guid of new match")
 		}
 	}
-	defer res.Body.Close()
 
 	payload, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -62,7 +65,41 @@ func TestCreateMatch(t *testing.T) {
 	if res.StatusCode != http.StatusCreated {
 		t.Errorf("Expected response status 201, received %s", res.Status)
 	}
+	var matchResponse newMatchResponse
+	err = json.Unmarshal(payload, &matchResponse)
+	if err != nil {
+		t.Errorf("Could not unmarshal payload into newMatchResponse object")
+	}
 
+	if matchResponse.ID == "" || !strings.Contains(loc[0], matchResponse.ID) {
+		t.Error("matchResponse.Id does not match Location header")
+	}
+	// After creating a match, match repository should have 1 item in it.
+	// matches := matchRepository.getMatches()
+	// if err != nil {
+	// 	t.Errorf("Unexpected error in getMatches(): %s", err)
+	// }
+	// if len(matches) != 1 {
+	// 	t.Errorf("Expected a match repo of 1 match, got size %d", len(matches))
+	// }
+
+	// var match gogo.Match
+	// match = matches[0]
+	// if match.GridSize != matchResponse.GridSize {
+	// 	t.Errorf("Expected repo match and HTTP response gridsize to match. Got %d and %d", match.GridSize, matchResponse.GridSize)
+	// }
+
+	// if match.PlayerWhite != "bob" {
+	// 	t.Errorf("Repository match, white player should be bob, got %s", match.PlayerWhite)
+	// }
+
+	// if matchResponse.PlayerWhite != "bob" {
+	// 	t.Errorf("Expected white player to be bob, got %s", matchResponse.PlayerWhite)
+	// }
+
+	// if matchResponse.PlayerBlack != "alfred" {
+	// 	t.Errorf("Expected black player to be alfred, got %s", matchResponse.PlayerBlack)
+	// }
 	fmt.Printf("Payload: %s", string(payload))
 
 }
