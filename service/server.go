@@ -15,14 +15,15 @@ func NewServer() *negroni.Negroni {
 
 	n := negroni.Classic()
 	mx := mux.NewRouter()
-
 	initRoutes(mx, formatter)
 	n.UseHandler(mx)
 	return n
 }
 
 func initRoutes(mx *mux.Router, formatter *render.Render) {
+	var matchRespository matchRepository
 	mx.HandleFunc("/test", testHandler(formatter)).Methods("Get")
+	mx.HandleFunc("/match", createMatchHandler(formatter, matchRespository)).Methods("Post")
 }
 
 func testHandler(formatter *render.Render) http.HandlerFunc {
