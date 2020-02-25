@@ -38,7 +38,7 @@ unit-test:
           go test -v ./service
 deploy:
   steps:
-    - internal/docker-push:
+    - internal/docker-scratch-push:
         username: $USERNAME
         password: $PASSWORD
         cmd: /pipeline/source/gogo-service
