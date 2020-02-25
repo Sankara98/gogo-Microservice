@@ -10,7 +10,7 @@ dev:
 build:
   steps:
     - wercker/golint
-
+    - setup-go-workspace: github.com/Sankara98/gogo-service
     - script:
         name: go get
         code: |
