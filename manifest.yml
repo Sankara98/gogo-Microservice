@@ -1,0 +1,8 @@
+applications:
+  - name: cf-net-linux
+    path: .
+    memory: 512MB
+    buildpacks:
+      - https://github.com/cloudfoundry/go-buildpack.git
+    disk_quota: 1024M
+    command: gogo-service

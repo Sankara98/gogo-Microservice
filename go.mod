@@ -9,3 +9,5 @@ require (
 	github.com/pborman/uuid v1.2.0 // indirect
 	github.com/unrolled/render v1.0.2
 )
+
+replace github.com/Sankara98/gogo-service/service => ./service
