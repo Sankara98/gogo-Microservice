@@ -9,7 +9,14 @@ type matchRepository interface {
 	getMatches() []gogo.Match
 	getMatch(id string) (match gogo.Match, err error)
 }
-
+type newMatchResponse struct {
+	ID          string `json:"id"`
+	StartedAt   int64  `json:"started_at"`
+	GridSize    int    `json:"gridsize"`
+	PlayerWhite string `json:"playerWhite"`
+	PlayerBlack string `json:"playerBlack"`
+	Turn        int    `json:"turn,omitempty"`
+}
 type newMatchRequest struct {
 	GridSize    int    `json:"gridsize"`
 	PlayerWhite string `json:"playerWhite"`
