@@ -15,7 +15,6 @@ build:
         name: go get
         code: |
           cd $WERCKER_SOURCE_DIR
-          go get github.com/Sankara98/gogo-service
           go version
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
     # Build the project
