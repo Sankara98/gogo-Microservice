@@ -29,7 +29,7 @@ build:
     - script:
         name: copy files to wercker output
         code: |
-          cp myapp $"WERCKER_OUTPUT_DIR"
+          cp application $"WERCKER_OUTPUT_DIR"
 unit-test:
   steps:
     - script:
