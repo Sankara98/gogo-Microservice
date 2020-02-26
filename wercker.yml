@@ -6,7 +6,7 @@ build:
     # Test the project
     - script:
         name: Unit tests
-        code: go test ./...     
+        code: go test -v ./service    
     - internal/docker-build: 
         dockerfile: Dockerfile 
         image-name: my-new-image # name used to refer to this image until it's pushed   
