@@ -1,5 +1,8 @@
 FROM golang
-WORKDIR /go/src
+WORKDIR /work
 ADD . .
 RUN go test -v ./service
-RUN go build -o bin
+RUN go build -o bin/myapp .
+WORKDIR /
+WORKDIR /bin
+RUN pwd
