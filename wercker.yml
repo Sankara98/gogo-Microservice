@@ -1,3 +1,62 @@
+
+build:
+  box: golang
+  steps:
+    - wercker/golint
+    # Test the project
+    - script:
+        name: Unit tests
+        code: go test ./...     
+    - internal/docker-build: 
+        dockerfile: Dockerfile 
+        image-name: my-new-image # name used to refer to this image until it's pushed   
+    - internal/docker-run:
+        image: my-new-image
+        name: myTestContainer     
+    - script: 
+        name: Test the container
+        code: |
+            curlOutput=`curl -s myTestContainer:5000`; then 
+            echo $curlOutput     
+    - internal/docker-kill:
+        name: myTestContainer               
+    - internal/docker-push:
+        username: $USERNAME
+        password: $PASSWORD
+        port: "8000"
+        tag: latest
+        repository: sankara98/gogo-service
+        registry: https://registry.hub.docker.com
+
+
+unit-test:
+  box: golang
+   - script:
+        name: go build
+        code: |
+          go build ./...
+  steps:
+    - script:
+        name: gogo service unit test
+        code: |
+          go test -v ./service
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#######################################################################
+
 box: golang
 # Defining the dev pipeline
 dev:
@@ -15,7 +74,6 @@ build:
         name: go get
         code: |
           cd $WERCKER_SOURCE_DIR
-          go get github.com/Sankara98/gogo-service
           go version
           export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
     # Build the project
@@ -40,11 +98,4 @@ unit-test:
           go test -v ./service
 deploy:
   steps:
-    - internal/docker-push:
-        username: $USERNAME
-        password: $PASSWORD
-        entrypoint: /go
-        port: "8080"
-        tag: latest
-        repository: sankara98/gogo-service
-        registry: https://registry.hub.docker.com
+    
