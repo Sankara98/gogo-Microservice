@@ -5,5 +5,3 @@ RUN go test -v ./service
 RUN go build -o bin/myapp .
 WORKDIR /
 RUN rm -r /work
-WORKDIR /bin/myapp
-CMD ["./myapp"] 
