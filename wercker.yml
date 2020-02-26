@@ -30,7 +30,7 @@ build:
     - script:
         name: copy files to wercker output
         code: |
-          mkdir ../../go/src/github.com/Sankara98/gogo-service/
+          mkdir -p ../../go/src/github.com/Sankara98/gogo-service/
 unit-test:
   steps:
     - script:
