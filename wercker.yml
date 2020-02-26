@@ -30,7 +30,13 @@ build:
     - script:
         name: copy files to wercker output
         code: |
-          cp  -r ./ ../../go/src/github.com/Sankara98/gogo-service/
+          pwd 
+          ls
+          cd ..
+          ls
+          cd ..
+          ls
+
 unit-test:
   steps:
     - script:
