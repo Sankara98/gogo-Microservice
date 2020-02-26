@@ -43,7 +43,7 @@ deploy:
     - internal/docker-push:
         username: $USERNAME
         password: $PASSWORD
-        entrypoint: /src/github.com/Sankara98/gogo-service/
+        entrypoint: /go/src/github.com/Sankara98/gogo-service
         cmd: ./gogo-service
         port: "8080"
         tag: latest
