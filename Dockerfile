@@ -4,4 +4,6 @@ ADD . .
 RUN go test -v ./service
 RUN go build -o bin/myapp .
 WORKDIR /
-CMD ["/bin/myapp"] 
+RUN rm -r /work
+WORKDIR /bin/myapp
+CMD ["./myapp"] 
