@@ -17,7 +17,8 @@ build:
         name: Test the container
         code: |
             if curlOutput=`curl -s myTestContainer:8000/test`; then 
-            echo $curlOutput     
+            echo $curlOutput   
+            fi  
     - internal/docker-kill:
         name: myTestContainer               
     - internal/docker-push:
