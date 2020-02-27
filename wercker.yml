@@ -16,7 +16,7 @@ build:
     - script: 
         name: Test the container
         code: |
-            curlOutput=`curl -s myTestContainer:8000/test`; then 
+            if curlOutput=`curl -s myTestContainer:8000/test`; then 
             echo $curlOutput     
     - internal/docker-kill:
         name: myTestContainer               
