@@ -12,7 +12,14 @@ build:
         image-name: my-new-image # name used to refer to this image until it's pushed   
     - internal/docker-run:
         image: my-new-image
-        name: myTestContainer                     
+        name: myTestContainer     
+    - script: 
+        name: Test the container
+        code: |
+            curlOutput=`curl -s myTestContainer:8000/test`; then 
+            echo $curlOutput     
+    - internal/docker-kill:
+        name: myTestContainer               
     - internal/docker-push:
         username: $USERNAME
         password: $PASSWORD
