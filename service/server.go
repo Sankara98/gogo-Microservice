@@ -1,11 +1,35 @@
 package service
 
 import (
-	"github.com/urfave/negroni"
+	// "fmt"
+	"net/http"
+
+	// "github.com/cloudfoundry-community/go-cfenv"
+	// cftools "github.com/cloudnativego/cf-tools"
+	// "github.com/cloudnativego/cfmgo"
 	"github.com/gorilla/mux"
 	"github.com/unrolled/render"
-	"net/http"
+	"github.com/urfave/negroni"
 )
+
+// func initRepository() (repo matchRepository) {
+// 	appEnv, _ := cfenv.Current()
+// 	dbServiceURI, err := cftools.GetVCAPServiceProperty(dbServiceName, "url", appEnv)
+// 	if err != nil || dbServiceURI == "" {
+// 		if err != nil {
+// 			fmt.Printf("\nError retrieving database configuration: %v\n", err)
+// 		}
+// 		fmt.Println("MongoDB was not detected; configuring inMemoryRepository...")
+// 		repo = newInMemoryRepository()
+// 		return
+// 	}
+// 	matchCollection := cfmgo.Connect(cfmgo.NewCollectionDialer, dbServiceURI,
+// 		MatchesCollectionName)
+// 	fmt.Printf("Connecting to MongoDB service: %s...\n", dbServiceName)
+// 	repo = newMongoMatchRepository(matchCollection)
+// 	return
+
+// }
 
 // NewServer configures and returns a Server
 func NewServer() *negroni.Negroni {
