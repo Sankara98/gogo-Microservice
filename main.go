@@ -1,8 +1,9 @@
 package main
 
 import (
-	service "github.com/Sankara98/gogo-service/service"
 	"os"
+
+	service "github.com/Sankara98/gogo-service/service"
 )
 
 func main() {
