@@ -1,4 +1,5 @@
-
+services:
+  - mongo
 build:
   box: golang
   steps:
@@ -28,6 +29,31 @@ build:
         tag: latest
         repository: sankara98/gogo-service
         registry: https://registry.hub.docker.com
+
+integration-tests:
+  box: golang
+  services: 
+    - mongo
+  steps:
+    - script:
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get -u github.com/Masterminds/glide
+          go get -u github.com/cloudnativego/cf-tools/vcapinate
+          export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
+          glide install
+    - script:
+        name: build
+        code: |
+          go build ./...
+    - script:
+        name: mongo integration test
+        code: |
+         export VCAP_SERVICES=`vcapinate -path=./integrations/vcap.yml`
+         export VCAP_APPLICATION={}
+         godep go test ./integrations/_test -v -race
 
 
 unit-test:
