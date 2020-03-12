@@ -1,22 +1,24 @@
 package service
+
 import (
 	"testing"
+
 	"github.com/cloudnativego/cfmgo"
 	"github.com/cloudnativego/gogo-engine"
 	"github.com/cloudnativego/gogo-service/fakes"
 )
 
-var(
+var (
 	fakeDBURI = "mongodb://fake.uri@addr:port/guid"
 )
 
-func TestAddMatchShowsUpInMongoRepository (t *testing.T) {
+func TestAddMatchShowsUpInMongoRepository(t *testing.T) {
 	var fakeMatches = []matchRecord{}
-	var matchesCollection = cfmgo.Connect {
+	var matchesCollection = cfmgo.Connect(
 		fakes.FakeNewCollectionDialer(fakeMatches),
 		fakeDBURI,
-		MatchesCollectionName,
-	}
+		"MatchesCollectionName",
+	)
 	repo := newMongoMatchRepository(matchesCollection)
 	match := gogo.NewMatch(19, "bob", "alfred")
 	err := repo.addMatch(match)
@@ -34,15 +36,14 @@ func TestAddMatchShowsUpInMongoRepository (t *testing.T) {
 	}
 }
 
-func TestGetMatchRetrievesProperMatchFromMongo (t *testing.T) {
+func TestGetMatchRetrievesProperMatchFromMongo(t *testing.T) {
 	fakes.TargetCount = 1
 	var fakeMatches = []matchRecord{}
-	var matchesCollection = cfmgo.Connect {
+	var matchesCollection = cfmgo.Connect(
 		fakes.FakeNewCollectionDialer(fakeMatches),
 		fakeDBURI,
-		MatchesCollectionName,
-	}
-
+		"MatchesCollectionName",
+	)
 	repo := newMongoMatchRepository(matchesCollection)
 	match := gogo.NewMatch(19, "bob", "alfred")
 	err := repo.addMatch(match)
@@ -56,18 +57,18 @@ func TestGetMatchRetrievesProperMatchFromMongo (t *testing.T) {
 		t.Errorf("Unable to find match with ID %v... %s", targetID, err)
 	}
 
-	if foundMatch.Gridzide != 19 || foundMatch.PlayerBlack != "bob" {
+	if foundMatch.GridSize != 19 || foundMatch.PlayerBlack != "bob" {
 		t.Errorf("Unexpected match results: %v", foundMatch)
 	}
 }
 
 func TestGetNonExistentMatchReturnError(t *testing.T) {
 	fakes.TargetCount = 0
-	var fakeMatches = [matchRecord]{}
+	var fakeMatches = []matchRecord{}
 	var matchesCollection = cfmgo.Connect(
-		fakes.FakeNewCollectionDialer(fakesMatches),
+		fakes.FakeNewCollectionDialer(fakeMatches),
 		fakeDBURI,
-		MatchesCollectionName,
+		"MatchesCollectionName",
 	)
 
 	repo := newMongoMatchRepository(matchesCollection)
