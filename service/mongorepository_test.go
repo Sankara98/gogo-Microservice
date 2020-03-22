@@ -76,7 +76,7 @@ func TestGetNonExistentMatchReturnError(t *testing.T) {
 	if err == nil {
 		t.Errorf("Expected getMatch to error with incorrect match details")
 	}
-	if err.Error() != "Match not foud" {
+	if err.Error() != "Match not found" {
 		t.Errorf("Expected 'Match not found' error; received: '%v'", err)
 	}
 }
